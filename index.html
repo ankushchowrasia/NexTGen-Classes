@@ -76,7 +76,46 @@
         .mobile-menu.open {
             transform: translateX(0);
         }
-    </style>
+    
+
+/* Mobile responsiveness overrides to match desktop layout on small screens */
+@media (max-width: 768px) {
+  /* Stack hero to single column and center content */
+  #home .grid { grid-template-columns: 1fr !important; gap: 1.5rem; }
+  #home .reveal { text-align: center; }
+
+  /* Large brand heading */
+  #home h1.text-7xl { font-size: 2.75rem !important; line-height: 1.02 !important; margin-bottom: .75rem; }
+  #home h1.text-6xl { font-size: 2rem !important; }
+
+  /* Make CTA buttons full width and stacked */
+  #home .flex.flex-col.sm\:flex-row { flex-direction: column !important; }
+  #home .group.bg-brand-green, #home a.border-2 { width: 100% !important; justify-content: center !important; padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
+
+  /* Reduce hero image height and ensure cover */
+  #home .relative.w-full.max-w-md { max-width: 520px !important; margin: 0 auto; }
+  #home .relative.bg-black img, .relative.bg-black img { height: 320px !important; object-fit: cover !important; }
+
+  /* Adjust spacing and typography site-wide */
+  .max-w-7xl { padding-left: 1rem !important; padding-right: 1rem !important; }
+  .py-24 { padding-top: 2.5rem !important; padding-bottom: 2.5rem !important; }
+  .text-3xl { font-size: 1.5rem !important; }
+
+  /* Ensure navigation is compact on mobile */
+  .hidden.md\:flex { display: none !important; }
+  .md\:hidden { display: block !important; }
+  nav#navbar .flex.justify-between { align-items: center !important; }
+
+  /* Make testimonial & course grids single column */
+  .grid.md\:grid-cols-2, .grid.lg\:grid-cols-3 { grid-template-columns: 1fr !important; }
+
+  /* Buttons in footer and forms full width */
+  footer .flex.gap-4 a { display: inline-flex !important; }
+  form input[type="email"] { width: 100% !important; }
+  form button { width: 100% !important; }
+}
+
+</style>
 </head>
 <body class="bg-black text-white antialiased overflow-x-hidden">
 
