@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexTGen Classes | Master Your Future</title>
+    <meta name="description" content="Expert-led courses in technology, business, and creative skills.">
+    
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            green: '#00BF63',
+                            black: '#000000',
+                            gray: '#F3F4F6'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Poppins', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'glow': '0 10px 30px -10px rgba(0, 191, 99, 0.5)',
+                        'card': '0 4px 20px rgba(0,0,0,0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Animations & Utilities */
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, h4, .font-heading { font-family: 'Poppins', sans-serif; }
+
+        .text-gradient { background: linear-gradient(135deg, #00BF63 0%, #00FF7F 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .bg-black { background: #000 !important; }
+
+        /* Hover Card Lift */
+        .hover-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .hover-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -5px rgba(0, 191, 99, 0.15);
+            border-bottom: 3px solid #00BF63;
+        }
+
+        /* Scroll Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            transition: transform 0.3s ease-in-out;
+            transform: translateX(100%);
+        }
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body class="bg-black text-white antialiased overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-transparent py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-12">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center gap-4 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <div class="w-8 h-8 bg-brand-green rounded-lg flex items-center justify-center text-white font-bold text-xl">N</div>
+                    <span class="text-2xl font-heading font-bold text-white tracking-tight">NexTGen <span class="text-brand-green">Classes</span></span>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8 ml-10">
+                    <a href="#home" class="text-sm font-medium text-white hover:text-brand-green transition">Home</a>
+                    <a href="#features" class="text-sm font-medium text-white hover:text-brand-green transition">Features</a>
+                    <a href="#courses" class="text-sm font-medium text-white hover:text-brand-green transition">Courses</a>
+                    <a href="#testimonials" class="text-sm font-medium text-white hover:text-brand-green transition">Testimonials</a>
+                    
+                    
+                </div>
+
+                <!-- Mobile Toggle -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-btn" class="text-white text-2xl focus:outline-none">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Drawer -->
+    <div id="mobile-menu" class="mobile-menu fixed inset-0 z-[60] bg-black">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-10">
+                <span class="text-2xl font-heading font-bold">Menu</span>
+                <button id="close-menu" class="text-2xl"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="flex flex-col space-y-6 text-center">
+                <a href="#home" class="text-xl font-medium text-white mobile-link">Home</a>
+                <a href="#courses" class="text-xl font-medium text-white mobile-link">Courses</a>
+                <a href="#features" class="text-xl font-medium text-white mobile-link">About Us</a>
+                <a href="#contact" class="text-xl font-medium text-white mobile-link">Contact</a>
+                <hr class="border-gray-700">
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 bg-black overflow-hidden">
+        <!-- Background Decor -->
+        <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-brand-green/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-72 h-72 bg-black/5 rounded-full blur-3xl"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <!-- Text Content -->
+                <div class="reveal active">
+                    <h1 class="text-7xl font-extrabold text-brand-green mb-6 text-center animate-pulse">NexTGen&nbsp;Classes</h1>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-green/10 text-brand-green text-xs font-bold uppercase tracking-wider mb-6">
+                        <span class="w-2 h-2 rounded-full bg-brand-green animate-pulse"></span> New Batches Starting
+                    </div>
+                    <h1 class="text-6xl lg:text-7xl font-extrabold leading-[1.1] mb-6 text-white">
+                        Unlock Your <br>
+                        <span class="text-gradient">True Potential.</span></span>
+                    </h1>
+                    <p class="text-lg text-white mb-8 max-w-lg leading-relaxed">
+                        Master in-demand skills in design, coding, and business. Join a community of learners driven by innovation.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="#courses" class="group bg-brand-green text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-black hover:shadow-glow transition-all duration-300 flex items-center justify-center gap-2">
+                            Explore Courses <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                        <a href="#features" class="px-8 py-4 rounded-full font-semibold text-lg border-2 border-brand-green text-white hover:bg-brand-green hover:text-black transition-all flex items-center justify-center gap-2">
+                            <i class="fas fa-play-circle"></i> Watch Demo
+                        </a>
+                    </div>
+                    
+                    <div class="mt-12 flex items-center gap-6 text-sm font-medium text-white">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check-circle text-brand-green"></i> Certified
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check-circle text-brand-green"></i> Lifetime Access
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check-circle text-brand-green"></i> Expert Mentors
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Image / Vector -->
+                <div class="relative lg:h-[500px] flex items-center justify-center reveal delay-200">
+                    <div class="relative w-full max-w-md mx-auto">
+                        <!-- Abstract Card Stack Effect -->
+                        <div class="absolute top-0 -right-4 w-full h-full bg-brand-black rounded-3xl transform rotate-3 opacity-10"></div>
+                        <div class="absolute top-0 -right-8 w-full h-full bg-brand-green rounded-3xl transform rotate-6 opacity-10"></div>
+                        
+                        <!-- Main Image Container -->
+                        <div class="relative bg-black rounded-3xl shadow-2xl overflow-hidden border border-gray-700">
+                            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Students learning" class="w-full h-full object-cover">
+                            
+                            <!-- Floating Badge -->
+                            <div class="absolute bottom-6 left-6 bg-black/90 backdrop-blur-sm p-4 rounded-xl shadow-lg flex items-center gap-3 animate-bounce" style="animation-duration: 3s;">
+                                <div class="bg-brand-green p-2 rounded-full text-white">
+                                    <i class="fas fa-user-graduate"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-white">Total Students</p>
+                                    <p class="font-bold text-white">1,200+</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-24 bg-black">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+                <h2 class="text-brand-green" class="text-3xl md:text-4xl font-bold mb-4">Why We Are The <span class="text-brand-green">Best Choice</span></h2>
+                <p class="text-white">We provide more than just online courses. We provide a pathway to your future career.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="bg-black p-8 rounded-3xl border border-gray-700 shadow-card hover-card reveal">
+                    <div class="w-14 h-14 bg-brand-green/10 rounded-2xl flex items-center justify-center text-brand-green text-2xl mb-6">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h3 class="text-brand-green" class="text-xl font-bold mb-3">Expert Instructors</h3>
+                    <p class="text-white text-sm leading-relaxed">Learn from industry experts who have hands-on experience in the field.</p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-black p-8 rounded-3xl border border-gray-700 shadow-card hover-card reveal delay-100">
+                    <div class="w-14 h-14 bg-black/5 rounded-2xl flex items-center justify-center text-white text-2xl mb-6">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <h3 class="text-brand-green" class="text-xl font-bold mb-3">Interactive Learning</h3>
+                    <p class="text-white text-sm leading-relaxed">Engage with quizzes, coding challenges, and peer discussions.</p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-black p-8 rounded-3xl border border-gray-700 shadow-card hover-card reveal delay-200">
+                    <div class="w-14 h-14 bg-brand-green/10 rounded-2xl flex items-center justify-center text-brand-green text-2xl mb-6">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h3 class="text-brand-green" class="text-xl font-bold mb-3">Trusted Certifications</h3>
+                    <p class="text-white text-sm leading-relaxed">Earn certificates recognized by top companies worldwide upon completion.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Courses -->
+    <section id="courses" class="py-24 bg-black">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-end mb-12 reveal">
+                <div>
+                    <h2 class="text-brand-green" class="text-3xl md:text-4xl font-bold mb-2">Popular <span class="text-brand-green">Courses</span></h2>
+                    <p class="text-white">Explore our highest-rated programs.</p>
+                </div>
+                <a href="#" class="hidden md:inline-flex items-center gap-2 font-bold text-white hover:text-brand-green transition">
+                    View All <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Course Card 1 -->
+                <div class="bg-black rounded-2xl overflow-hidden shadow-card hover-card reveal">
+                    <div class="relative h-48">
+                        <img src="https://images.unsplash.com/photo-1587620962725-abab7fe55159?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Coding" class="w-full h-full object-cover">
+                        <div class="absolute top-4 left-4 bg-black/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-white">
+                            Development
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-3">
+                            <div class="flex text-yellow-400 text-xs">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <span class="text-xs text-white">2,500 Reviews</span>
+                        </div>
+                        <h3 class="text-brand-green" class="text-lg font-bold mb-2 hover:text-brand-green transition cursor-pointer">Full Stack Web Development</h3>
+                        <div class="flex items-center gap-4 text-xs text-white mb-6">
+                            <span><i class="far fa-clock"></i> 24 Weeks</span>
+                            <span><i class="far fa-user"></i> Beginner</span>
+                        </div>
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-700">
+                            <span class="text-xl font-bold text-brand-green">$99</span>
+                            <button class="text-white font-semibold hover:text-brand-green transition">Enroll Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course Card 2 -->
+                <div class="bg-black rounded-2xl overflow-hidden shadow-card hover-card reveal delay-100">
+                    <div class="relative h-48">
+                        <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Design" class="w-full h-full object-cover">
+                        <div class="absolute top-4 left-4 bg-black/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-white">
+                            Design
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-3">
+                            <div class="flex text-yellow-400 text-xs">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="text-xs text-white">1,800 Reviews</span>
+                        </div>
+                        <h3 class="text-brand-green" class="text-lg font-bold mb-2 hover:text-brand-green transition cursor-pointer">UI/UX Design Masterclass</h3>
+                        <div class="flex items-center gap-4 text-xs text-white mb-6">
+                            <span><i class="far fa-clock"></i> 12 Weeks</span>
+                            <span><i class="far fa-user"></i> Intermediate</span>
+                        </div>
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-700">
+                            <span class="text-xl font-bold text-brand-green">$89</span>
+                            <button class="text-white font-semibold hover:text-brand-green transition">Enroll Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course Card 3 -->
+                <div class="bg-black rounded-2xl overflow-hidden shadow-card hover-card reveal delay-200">
+                    <div class="relative h-48">
+                        <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Marketing" class="w-full h-full object-cover">
+                        <div class="absolute top-4 left-4 bg-black/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-white">
+                            Marketing
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-3">
+                            <div class="flex text-yellow-400 text-xs">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <span class="text-xs text-white">3,100 Reviews</span>
+                        </div>
+                        <h3 class="text-brand-green" class="text-lg font-bold mb-2 hover:text-brand-green transition cursor-pointer">Digital Marketing Zero to Hero</h3>
+                        <div class="flex items-center gap-4 text-xs text-white mb-6">
+                            <span><i class="far fa-clock"></i> 8 Weeks</span>
+                            <span><i class="far fa-user"></i> All Levels</span>
+                        </div>
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-700">
+                            <span class="text-xl font-bold text-brand-green">$59</span>
+                            <button class="text-white font-semibold hover:text-brand-green transition">Enroll Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-12 text-center md:hidden">
+                <a href="#" class="btn-secondary px-8 py-3 rounded-full font-semibold border-2 border-black">View All Courses</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="py-24 bg-black relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-brand-green" class="text-3xl md:text-4xl font-bold mb-4">Student <span class="text-brand-green">Stories</span></h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-black/40 p-8 rounded-3xl border-2 border-brand-green relative reveal">
+                    <i class="fas fa-quote-left text-4xl text-brand-green/20 absolute top-8 left-8"></i>
+                    <p class="text-white mb-6 relative z-10 italic">"The instructors explains complex concepts in such a simple way. The projects really helped me build my portfolio and land my first developer job."</p>
+                    <div class="flex items-center gap-4">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-12 h-12 rounded-full object-cover">
+                        <div>
+                            <h4 class="font-bold">Rahul Sharma</h4>
+                            <p class="text-xs text-brand-green font-bold">Frontend Developer</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-black/40 p-8 rounded-3xl border-2 border-brand-green relative reveal delay-100">
+                    <i class="fas fa-quote-left text-4xl text-brand-green/20 absolute top-8 left-8"></i>
+                    <p class="text-white mb-6 relative z-10 italic">"NexTGen Classes gave me the flexibility I needed to learn while working. The community support is incredible."</p>
+                    <div class="flex items-center gap-4">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-12 h-12 rounded-full object-cover">
+                        <div>
+                            <h4 class="font-bold">Sarah Jenkins</h4>
+                            <p class="text-xs text-brand-green font-bold">Product Designer</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="contact" class="py-20">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-black rounded-[3rem] p-12 text-center relative overflow-hidden reveal">
+                <!-- Decorative Circles -->
+                <div class="absolute top-0 left-0 w-32 h-32 bg-brand-green rounded-full blur-3xl opacity-30"></div>
+                <div class="absolute bottom-0 right-0 w-32 h-32 bg-black rounded-full blur-3xl opacity-20"></div>
+                
+                <h2 class="text-brand-green" class="text-3xl md:text-5xl font-bold text-white mb-6 relative z-10">Ready to start your journey?</h2>
+                <p class="text-white mb-10 max-w-xl mx-auto relative z-10">Join 15,000+ students from around the world and launch your new career today.</p>
+                
+                <div class="flex flex-col sm:flex-row justify-center gap-4 relative z-10">
+                    <button class="bg-brand-green text-white px-8 py-4 rounded-full font-bold hover:bg-black hover:text-white transition duration-300">
+                        Get Started Free
+                    </button>
+                    <button class="bg-transparent border border-white/30 text-white px-8 py-4 rounded-full font-bold hover:bg-black hover:text-white transition duration-300">
+                        Contact Support
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black pt-20 pb-10 border-t border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+                <div class="col-span-2 md:col-span-1">
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-6 h-6 bg-brand-green rounded text-white flex items-center justify-center font-bold text-xs">N</div>
+                        <span class="text-xl font-bold">NexT<span class="text-brand-green">Gen</span></span>
+                    </div>
+                    <p class="text-sm text-white mb-6">Empowering learners worldwide with accessible, high-quality education.</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-8 h-8 rounded-full bg-black border-2 border-brand-green flex items-center justify-center text-brand-green hover:bg-brand-green hover:text-black transition"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="w-8 h-8 rounded-full bg-black border-2 border-brand-green flex items-center justify-center text-brand-green hover:bg-brand-green hover:text-black transition"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="w-8 h-8 rounded-full bg-black border-2 border-brand-green flex items-center justify-center text-brand-green hover:bg-brand-green hover:text-black transition"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Company</h4>
+                    <ul class="space-y-2 text-sm text-white">
+                        <li><a href="#" class="hover:text-brand-green transition">About Us</a></li>
+                        <li><a href="#" class="hover:text-brand-green transition">Careers</a></li>
+                        <li><a href="#" class="hover:text-brand-green transition">Blog</a></li>
+                        <li><a href="#" class="hover:text-brand-green transition">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Resources</h4>
+                    <ul class="space-y-2 text-sm text-white">
+                        <li><a href="#" class="hover:text-brand-green transition">Support</a></li>
+                        <li><a href="#" class="hover:text-brand-green transition">Terms & Privacy</a></li>
+                        <li><a href="#" class="hover:text-brand-green transition">Sitemap</a></li>
+                        <li><a href="#" class="hover:text-brand-green transition">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold mb-4">Newsletter</h4>
+                    <form class="flex flex-col gap-2">
+                        <input type="email" placeholder="Enter your email" class="bg-black border border-gray-200 px-4 py-2 rounded-lg text-sm focus:outline-none focus:border-brand-green">
+                        <button class="bg-black text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-brand-green transition">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-xs text-white">© 2025 NexTGen Classes. All rights reserved.</p>
+                <div class="flex gap-6 text-xs text-white">
+                    <a href="#" class="hover:text-white">Privacy Policy</a>
+                    <a href="#" class="hover:text-white">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Functionality -->
+    <script>
+        // --- Sticky Navbar Effect ---
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                navbar.classList.add('bg-black', 'shadow-md', 'py-2');
+                navbar.classList.remove('bg-transparent', 'py-4');
+            } else {
+                navbar.classList.remove('bg-black', 'shadow-md', 'py-2');
+                navbar.classList.add('bg-transparent', 'py-4');
+            }
+        });
+
+        // --- Mobile Menu Toggle ---
+        const mobileBtn = document.getElementById('mobile-btn');
+        const closeMenu = document.getElementById('close-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        function toggleMenu() {
+            mobileMenu.classList.toggle('open');
+            document.body.classList.toggle('overflow-hidden'); // Prevent scrolling when menu is open
+        }
+
+        mobileBtn.addEventListener('click', toggleMenu);
+        closeMenu.addEventListener('click', toggleMenu);
+        
+        // Close menu when a link is clicked
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', toggleMenu);
+        });
+
+        // --- Scroll Reveal Animation ---
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 150;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        // Trigger once on load
+        reveal();
+    </script>
+</body>
+</html>
