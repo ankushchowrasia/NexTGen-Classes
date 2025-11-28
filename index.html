@@ -356,34 +356,65 @@
     </div>
   </div>
 </section>
-<!-- CONTACT CTA -->
-<section id="contact" class="py-20">
-  <div class="max-w-5xl mx-auto px-4 text-center">
-    <div class="bg-black p-12 rounded-[3rem] border border-gray-800 relative">
+<!-- CONTACT SECTION (FORM REPLACES OLD CTA) -->
+<section id="contact" class="py-24">
+  <div class="max-w-4xl mx-auto px-4">
 
-      <h2 class="text-4xl md:text-5xl text-brand-green font-bold mb-6">
-        Ready to start your journey?
-      </h2>
+    <h2 class="text-4xl md:text-5xl text-brand-green font-bold text-center mb-2">
+      Get In Touch
+    </h2>
+    <p class="text-center text-gray-300 mb-12">
+      Feel free to contact us for doubts, admissions, or support.
+    </p>
 
-      <p class="text-white mb-10 max-w-xl mx-auto">
-        Join 1000+ students at NexTGen Classes and unlock your academic and skill-based success.
-      </p>
+    <form action="https://formspree.io/f/xdkwzggb" method="POST"
+      class="bg-[#0a0f1a] border border-[#00BF63]/30 p-10 rounded-3xl shadow-lg">
 
-      <div class="flex flex-col sm:flex-row justify-center gap-4">
-        <a href="https://nextgenclasses.vercel.app/contact.html"
-           class="bg-brand-green text-black px-8 py-4 rounded-full font-bold hover:bg-black hover:text-white transition">
-           Contact Us
-        </a>
+      <!-- GRID NAME + EMAIL -->
+      <div class="grid md:grid-cols-2 gap-6">
 
-        <a href="https://nextgenclasses.vercel.app/support.html"
-           class="border border-white/30 px-8 py-4 rounded-full font-bold hover:bg-brand-green hover:text-black transition">
-           Support
-        </a>
+        <!-- NAME -->
+        <div>
+          <label class="text-brand-green text-sm font-semibold flex items-center gap-2 mb-2">
+            <i class="fa-solid fa-user"></i> Name
+          </label>
+          <input type="text" name="name" required
+            class="w-full px-4 py-3 bg-[#0d1320] border border-[#00BF63]/20 text-white rounded-xl focus:border-[#00BF63] outline-none">
+        </div>
+
+        <!-- EMAIL -->
+        <div>
+          <label class="text-brand-green text-sm font-semibold flex items-center gap-2 mb-2">
+            <i class="fa-solid fa-envelope"></i> Email
+          </label>
+          <input type="email" name="email" required
+            class="w-full px-4 py-3 bg-[#0d1320] border border-[#00BF63]/20 text-white rounded-xl focus:border-[#00BF63] outline-none">
+        </div>
+
       </div>
 
-    </div>
+      <!-- MESSAGE BOX -->
+      <div class="mt-6">
+        <label class="text-brand-green text-sm font-semibold flex items-center gap-2 mb-2">
+          <i class="fa-solid fa-comment"></i> Message
+        </label>
+        <textarea name="message" rows="6" required
+          class="w-full px-4 py-3 bg-[#0d1320] border border-[#00BF63]/20 text-white rounded-xl focus:border-[#00BF63] outline-none"></textarea>
+      </div>
+
+      <!-- SUBMIT BUTTON -->
+      <div class="mt-8">
+        <button type="submit"
+          class="bg-brand-green text-black font-bold text-lg px-10 py-4 rounded-full flex items-center gap-3 hover:shadow-lg hover:shadow-brand-green/30 transition">
+          <i class="fa-solid fa-paper-plane"></i> Send Message
+        </button>
+      </div>
+
+    </form>
+
   </div>
 </section>
+
 
 
 <!-- FOOTER -->
