@@ -1,6 +1,5 @@
-
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -14,8 +13,13 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- FAVICON (raw GitHub file) -->
+  <!-- FAVICON -->
   <link rel="icon" href="https://raw.githubusercontent.com/ankushchowrasia/NexTGen-Classes/dc7a913fc8fe117129395286ebfe739d5ea3bb67/NexTGen%20Classes%20new%201.png" type="image/png">
+
+  <!-- GSAP & Lenis -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 
   <script>
     tailwind.config = {
@@ -33,47 +37,163 @@
 
   <style>
     :root{--brand-green:#00BF63}
-    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;}
+    /* Body bg handled by canvas/css */
+    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial; cursor: default; background-color: #000;} 
     h1,h2,h3,.font-heading{font-family:Poppins, sans-serif;}
     .text-gradient{background:linear-gradient(135deg,var(--brand-green),#00FF7F);-webkit-background-clip:text;color:transparent}
     .hover-card{transition:all .3s cubic-bezier(.4,0,.2,1)}
     .hover-card:hover{transform:translateY(-8px);box-shadow:0 20px 40px -5px rgba(0,191,99,.12);border-bottom:3px solid var(--brand-green)}
     .testimonial-outline{border:2px solid var(--brand-green);box-shadow:0 6px 24px rgba(0,191,99,.06)}
     .hero-media{aspect-ratio:16/10;object-fit:cover;display:block;width:100%}
+    
+    /* Lenis Recommended CSS */
+    html.lenis, html.lenis body { height: auto; }
+    .lenis.lenis-smooth { scroll-behavior: auto !important; }
+    .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+    .lenis.lenis-stopped { overflow: hidden; }
+    .lenis.lenis-scrolling iframe { pointer-events: none; }
+
+    /* Custom Cursor Styles (Glowing Dot) */
+    #cursor-dot {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 16px; 
+      height: 16px;
+      background-color: #00BF63;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      box-shadow: 0 0 10px rgba(0, 191, 99, 0.8), 0 0 20px rgba(0, 191, 99, 0.5);
+      display: none; 
+      mix-blend-mode: screen;
+    }
+    
+    /* Background Canvas */
+    #bg-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1; /* Behind content */
+      pointer-events: none;
+    }
+
+    /* Navbar Link Visibility Fix */
+    #navbar a {
+      color: white !important; /* Forces white color even on visited links */
+    }
+    #navbar a:hover {
+      color: #00BF63 !important; /* Forces green on hover */
+    }
+
+    @media (pointer: fine) {
+      #cursor-dot { display: block; }
+    }
+
     @media (max-width:768px){
       #home .grid{grid-template-columns:1fr!important}
       #home h1.text-7xl{font-size:2.6rem!important}
       #home h1.text-6xl{font-size:1.9rem!important}
     }
-    /* Mobile menu hidden by default; script will toggle 'open' class */
+    
+    /* Animation Utility Classes */
+    .fade-up-text { opacity: 0; transform: translateY(30px); }
     .mobile-menu{transform:translateX(100%);transition:transform .28s ease-in-out}
     .mobile-menu.open{transform:translateX(0)}
+    
+    /* Button Border Drawing Animation */
+    .btn-draw {
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-draw::before,
+    .btn-draw::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 0;
+      box-sizing: border-box;
+      border: 2px solid transparent;
+      border-radius: inherit;
+    }
+    
+    /* Top Left Origin */
+    .btn-draw::before {
+      top: 0;
+      left: 0;
+    }
+    
+    /* Bottom Right Origin */
+    .btn-draw::after {
+      bottom: 0;
+      right: 0;
+    }
+    
+    /* Hover Effects */
+    .btn-draw:hover::before {
+      width: 100%;
+      height: 100%;
+      border-top-color: #00BF63;
+      border-right-color: #00BF63;
+      transition: width 0.2s linear, height 0.2s linear 0.2s;
+    }
+    
+    .btn-draw:hover::after {
+      width: 100%;
+      height: 100%;
+      border-bottom-color: #00BF63;
+      border-left-color: #00BF63;
+      transition: border-color 0s linear 0.4s, width 0.2s linear 0.4s, height 0.2s linear 0.6s;
+    }
+
+    /* Credit Animation */
+    @keyframes glowShift {
+      0% { color: #00BF63; text-shadow: 0 0 8px #00BF63; }
+      33% { color: #00FFAA; text-shadow: 0 0 8px #00FFAA; }
+      66% { color: #00D489; text-shadow: 0 0 8px #00D489; }
+      100% { color: #00BF63; text-shadow: 0 0 8px #00BF63; }
+    }
+    .animate-credit {
+      animation: glowShift 2.5s infinite ease-in-out;
+    }
+    @media(max-width:768px){
+      .animate-credit { font-size: 0.85rem; }
+    }
   </style>
 </head>
 
-<body class="bg-black text-white antialiased overflow-x-hidden">
+<body class="text-white antialiased overflow-x-hidden">
+
+  <!-- Background Canvas -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- Custom Cursor Element -->
+  <div id="cursor-dot"></div>
 
   <!-- NAVIGATION -->
   <nav id="navbar" class="fixed w-full z-50 bg-transparent py-4 transition-all duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
       <!-- Brand -->
-      <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo({top:0,behavior:'smooth'})" role="button" aria-label="Go to top">
+      <div class="nav-el flex items-center gap-3 cursor-pointer" onclick="lenis.scrollTo('#home')" role="button" aria-label="Go to top">
         <div class="w-8 h-8 bg-brand-green rounded-lg flex items-center justify-center text-black font-bold">N</div>
         <span class="text-2xl font-heading font-bold">NexTGen <span class="text-brand-green">Classes</span></span>
       </div>
 
       <!-- Desktop Menu -->
-      <div class="hidden md:flex items-center space-x-8">
-        <a href="#home" class="text-sm font-medium hover:text-brand-green transition">Home</a>
-        <a href="#features" class="text-sm font-medium hover:text-brand-green transition">Features</a>
-        <a href="#courses" class="text-sm font-medium hover:text-brand-green transition">Courses</a>
-        <a href="#testimonials" class="text-sm font-medium hover:text-brand-green transition">Testimonials</a>
-        <a href="https://nextgenclasses.vercel.app/about.html" class="text-sm font-medium hover:text-brand-green transition">About</a>
-        <a href="https://nextgenclasses.vercel.app/contact.html" class="text-sm font-medium hover:text-brand-green transition">Contact</a>
+      <div class="hidden md:flex items-center space-x-2">
+        <!-- Added inline-flex, whitespace-nowrap, and text-white to solve alignment and visibility -->
+        <a href="#home" class="nav-el nav-link btn-draw inline-flex items-center justify-center whitespace-nowrap text-sm font-medium text-white hover:text-brand-green transition px-4 py-2 rounded-lg" onclick="lenis.scrollTo('#home')">Home</a>
+        <a href="#features" class="nav-el nav-link btn-draw inline-flex items-center justify-center whitespace-nowrap text-sm font-medium text-white hover:text-brand-green transition px-4 py-2 rounded-lg" onclick="lenis.scrollTo('#features')">Features</a>
+        <a href="#courses" class="nav-el nav-link btn-draw inline-flex items-center justify-center whitespace-nowrap text-sm font-medium text-white hover:text-brand-green transition px-4 py-2 rounded-lg" onclick="lenis.scrollTo('#courses')">Courses</a>
+        <a href="#testimonials" class="nav-el nav-link btn-draw inline-flex items-center justify-center whitespace-nowrap text-sm font-medium text-white hover:text-brand-green transition px-4 py-2 rounded-lg" onclick="lenis.scrollTo('#testimonials')">Testimonials</a>
+        <a href="https://nextgenclasses.vercel.app/about.html" class="nav-el btn-draw inline-flex items-center justify-center whitespace-nowrap text-sm font-medium text-white hover:text-brand-green transition px-4 py-2 rounded-lg">About</a>
+        <a href="https://nextgenclasses.vercel.app/contact.html" class="nav-el btn-draw inline-flex items-center justify-center whitespace-nowrap text-sm font-medium text-white hover:text-brand-green transition px-4 py-2 rounded-lg">Contact</a>
       </div>
 
       <!-- Mobile Toggle -->
-      <div class="md:hidden flex items-center">
+      <div class="nav-el md:hidden flex items-center">
         <button id="mobile-btn" aria-expanded="false" aria-controls="mobile-menu" class="text-2xl p-2 focus:outline-none" title="Open menu">
           <i class="fas fa-bars"></i>
         </button>
@@ -89,10 +209,10 @@
     </div>
 
     <div class="flex flex-col space-y-6 text-center">
-      <a href="#home" class="mobile-link text-xl">Home</a>
-      <a href="#courses" class="mobile-link text-xl">Courses</a>
-      <a href="#features" class="mobile-link text-xl">Features</a>
-      <a href="#testimonials" class="mobile-link text-xl">Testimonials</a>
+      <a href="#home" class="mobile-link text-xl" onclick="toggleMenu(); lenis.scrollTo('#home')">Home</a>
+      <a href="#courses" class="mobile-link text-xl" onclick="toggleMenu(); lenis.scrollTo('#courses')">Courses</a>
+      <a href="#features" class="mobile-link text-xl" onclick="toggleMenu(); lenis.scrollTo('#features')">Features</a>
+      <a href="#testimonials" class="mobile-link text-xl" onclick="toggleMenu(); lenis.scrollTo('#testimonials')">Testimonials</a>
       <a href="https://nextgenclasses.vercel.app/about.html" class="mobile-link text-xl">About</a>
       <a href="https://nextgenclasses.vercel.app/contact.html" class="mobile-link text-xl">Contact</a>
       <a href="https://nextgenclasses.vercel.app/support.html" class="mobile-link text-xl">Support</a>
@@ -106,28 +226,30 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid lg:grid-cols-2 gap-12 items-center">
         <!-- Text -->
-        <div>
-          <h1 class="text-7xl font-extrabold text-brand-green mb-6">NexTGen Classes</h1>
+        <div class="hero-text-content">
+          <h1 class="hero-el text-7xl font-extrabold text-brand-green mb-6">NexTGen Classes</h1>
 
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-green/10 text-brand-green text-xs font-bold uppercase tracking-wider mb-6">
+          <div class="hero-el inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-green/10 text-brand-green text-xs font-bold uppercase tracking-wider mb-6">
             <span class="w-2 h-2 rounded-full bg-brand-green animate-pulse"></span> New Batches Starting
           </div>
 
-          <h2 class="text-6xl lg:text-7xl font-extrabold leading-[1.05] mb-6 text-white">Unlock Your <span class="text-gradient">True Potential.</span></h2>
+          <h2 class="hero-el text-6xl lg:text-7xl font-extrabold leading-[1.05] mb-6 text-white">Unlock Your <span class="text-gradient">True Potential.</span></h2>
 
-          <p class="text-lg text-white mb-8 max-w-lg">Master essential academic subjects including Humanities, English, and foundational classes with structured guidance. Join a community of learners driven by innovation.</p>
+          <p class="hero-el text-lg text-white mb-8 max-w-lg">Master essential academic subjects including Humanities, English, and foundational classes with structured guidance. Join a community of learners driven by innovation.</p>
 
-          <div class="flex flex-col sm:flex-row gap-4">
-            <a href="#courses" class="group bg-brand-green text-black px-8 py-4 rounded-full font-semibold text-lg flex items-center justify-center gap-2">
+          <div class="hero-el flex flex-col sm:flex-row gap-4">
+            <!-- Explore Courses (Filled Button) -->
+            <a href="#courses" class="btn-draw group bg-brand-green text-black px-8 py-4 rounded-lg font-semibold text-lg flex items-center justify-center gap-2" onclick="lenis.scrollTo('#courses')">
               Explore Courses <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
             </a>
 
-            <a href="https://www.youtube.com/@nextgenclassesjpg" target="_blank" class="px-8 py-4 rounded-full font-semibold text-lg border-2 border-brand-green text-white hover:bg-brand-green hover:text-black flex items-center justify-center gap-2">
+            <!-- Watch Demo (Outline Button) -->
+            <a href="https://www.youtube.com/@nextgenclassesjpg" target="_blank" class="btn-draw px-8 py-4 rounded-lg font-semibold text-lg border border-gray-600 hover:border-transparent text-white hover:text-brand-green flex items-center justify-center gap-2 transition-colors">
               <i class="fas fa-play-circle"></i> Watch Demo
             </a>
           </div>
 
-          <div class="mt-12 flex items-center gap-6 text-sm font-medium text-white">
+          <div class="hero-el mt-12 flex items-center gap-6 text-sm font-medium text-white">
             <div class="flex items-center gap-2"><i class="fas fa-check-circle text-brand-green"></i> Certified</div>
             <div class="flex items-center gap-2"><i class="fas fa-check-circle text-brand-green"></i> Lifetime Access</div>
             <div class="flex items-center gap-2"><i class="fas fa-check-circle text-brand-green"></i> Expert Mentors</div>
@@ -135,7 +257,7 @@
         </div>
 
         <!-- Image -->
-        <div class="relative flex items-center justify-center">
+        <div class="relative flex items-center justify-center hero-image-container">
           <div class="relative w-full max-w-md">
             <div class="absolute top-0 -right-4 w-full h-full bg-black rounded-3xl transform rotate-3 opacity-10"></div>
             <div class="absolute top-0 -right-8 w-full h-full bg-brand-green rounded-3xl transform rotate-6 opacity-10"></div>
@@ -155,68 +277,69 @@
         </div>
 
       </div>
-    
-      <!-- PART 1 END (continue with Part 2 for features/courses/testimonials) -->
+  </div>
+  </section>
+
 <!-- FEATURES -->
 <section id="features" class="py-24">
   <div class="max-w-7xl mx-auto px-4 text-center">
-    <h2 class="text-4xl font-bold text-brand-green mb-4">Why We Are The Best Choice</h2>
-    <p class="text-white mb-16">We provide specialised ICSE, CBSE, and ISC academic coaching across Humanities, English, and foundational subjects.</p>
+    <h2 class="section-title fade-up-text text-4xl font-bold text-brand-green mb-4">Why We Are The Best Choice</h2>
+    <p class="section-subtitle fade-up-text text-white mb-16">We provide specialised ICSE, CBSE, and ISC academic coaching across Humanities, English, and foundational subjects.</p>
 
     <div class="grid md:grid-cols-3 gap-8">
 
       <!-- BOX 1 -->
-      <div class="hover-card bg-black p-8 rounded-3xl border border-gray-700">
+      <div class="feature-card hover-card bg-black p-8 rounded-3xl border border-gray-700 opacity-0 translate-y-12">
         <div class="w-14 h-14 bg-brand-green/10 rounded-2xl flex items-center justify-center text-brand-green text-2xl mb-6">
           <i class="fas fa-chalkboard-teacher"></i>
         </div>
         <h3 class="text-brand-green text-xl font-bold mb-3">Expert Instructors</h3>
-        <p>Learn directly from experienced teachers who simplify complex concepts.</p>
+        <p class="text-gray-300">Learn directly from experienced teachers who simplify complex concepts.</p>
       </div>
 
       <!-- BOX 2 -->
-      <div class="hover-card bg-black p-8 rounded-3xl border border-gray-700">
+      <div class="feature-card hover-card bg-black p-8 rounded-3xl border border-gray-700 opacity-0 translate-y-12">
         <div class="w-14 h-14 bg-brand-green/10 rounded-2xl flex items-center justify-center text-brand-green text-2xl mb-6">
           <i class="fas fa-laptop-code"></i>
         </div>
         <h3 class="text-brand-green text-xl font-bold mb-3">Interactive Learning</h3>
-        <p>Engage with quizzes, assignments, notes, and real-time support.</p>
+        <p class="text-gray-300">Engage with quizzes, assignments, notes, and real-time support.</p>
       </div>
 
       <!-- BOX 3 -->
-      <div class="hover-card bg-black p-8 rounded-3xl border border-gray-700">
+      <div class="feature-card hover-card bg-black p-8 rounded-3xl border border-gray-700 opacity-0 translate-y-12">
         <div class="w-14 h-14 bg-brand-green/10 rounded-2xl flex items-center justify-center text-brand-green text-2xl mb-6">
           <i class="fas fa-certificate"></i>
         </div>
         <h3 class="text-brand-green text-xl font-bold mb-3">Trusted Results</h3>
-        <p>Students achieve top grades with our structured and disciplined approach.</p>
+        <p class="text-gray-300">Students achieve top grades with our structured and disciplined approach.</p>
       </div>
 
       <!-- BOX 4: Expert Notes -->
-      <div class="hover-card bg-black p-8 rounded-3xl border border-gray-700">
+      <div class="feature-card hover-card bg-black p-8 rounded-3xl border border-gray-700 opacity-0 translate-y-12">
         <div class="w-14 h-14 bg-brand-green/10 rounded-2xl flex items-center justify-center text-brand-green text-2xl mb-6">
           <i class="fas fa-book-open"></i>
         </div>
         <h3 class="text-brand-green text-xl font-bold mb-3">Expert Notes</h3>
-        <p>High‑quality, exam‑ready notes prepared with clear explanations and structured summaries.</p>
+        <p class="text-gray-300">High‑quality, exam‑ready notes prepared with clear explanations and structured summaries.</p>
       </div>
 
       <!-- BOX 5: 12×7 Support -->
-      <div class="hover-card bg-black p-8 rounded-3xl border border-gray-700">
+      <div class="feature-card hover-card bg-black p-8 rounded-3xl border border-gray-700 opacity-0 translate-y-12">
         <div class="w-14 h-14 bg-brand-green/10 rounded-2xl flex items-center justify-center text-brand-green text-2xl mb-6">
           <i class="fas fa-headset"></i>
         </div>
         <h3 class="text-brand-green text-xl font-bold mb-3">12×7 Support</h3>
-        <p>Instant help through calls and live support so students never remain stuck with doubts.</p>
+        <p class="text-gray-300">Instant help through calls and live support so students never remain stuck with doubts.</p>
       </div>
 
       <!-- BOX 6: 1:1 Teaching -->
-      <div class="hover-card bg-black p-8 rounded-3xl border border-gray-700">
+      <div class="feature-card hover-card bg-black p-8 rounded-3xl border border-gray-700 opacity-0 translate-y-12">
         <div class="w-14 h-14 bg-brand-green/10 rounded-2xl flex items-center justify-center text-brand-green text-2xl mb-6">
           <i class="fas fa-user-check"></i>
         </div>
         <h3 class="text-brand-green text-xl font-bold mb-3">1:1 Teaching</h3>
-        <p>Personalised one‑on‑one sessions for maximum clarity, focus, and improvement.</p>
+        <p class="text-gray-300">Personalised one‑on‑one sessions for maximum clarity, focus, and improvement.</p>
       </div>
 
     </div>
@@ -229,62 +352,59 @@
   <div class="max-w-7xl mx-auto px-4">
     <div class="flex justify-between items-end mb-12">
       <div>
-        <h2 class="text-4xl text-brand-green font-bold mb-2">Academic Programs</h2>
-        <p class="text-white">All subjects taught with structured notes, tests, doubt-solving & personalised guidance.</p>
+        <h2 class="course-title fade-up-text text-4xl text-brand-green font-bold mb-2">Academic Programs</h2>
+        <p class="course-subtitle fade-up-text text-white">All subjects taught with structured notes, tests, doubt-solving & personalised guidance.</p>
       </div>
     </div>
 
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-      <!-- Course 1: Arts Subjects (Classes 6–12) -->
-<div class="bg-black rounded-2xl overflow-hidden shadow-card hover-card">
-  <div class="relative h-48">
-    <video class="w-full h-full object-cover" src="https://raw.githubusercontent.com/ankushchowrasia/NexTGen-Classes/51688aa4597877628380c35e04e9dac88ac41688/NexTGen_Humanities_Promo_Video_Generation.mp4" autoplay muted loop playsinline></video>
-    <div class="absolute top-4 left-4 bg-black/90 px-3 py-1 rounded-full text-xs font-bold">Humanities</div>
-  </div>
-  <div class="p-6">
-    <h3 class="text-brand-green text-lg font-bold mb-2">Humanities (Geography, History, Pol. Science, Sociology)</h3>
-    <p class="text-sm text-gray-300 mb-4">Complete Arts stream preparation with notes, tests, past papers and personalised guidance.</p>
-    <div class="flex justify-between items-center border-t border-gray-700 pt-4">
-      <span class="text-sm font-bold text-brand-green">Classes 6–12</span>
-      <a href="https://nextgenclasses.vercel.app/contact.html" class="font-semibold hover:text-brand-green">Enroll</a>
-    </div>
-  </div>
-</div>
+      <!-- Course 1 -->
+      <div class="course-card bg-black rounded-2xl overflow-hidden shadow-card hover-card opacity-0 scale-95">
+        <div class="relative h-48">
+          <video class="w-full h-full object-cover" src="https://raw.githubusercontent.com/ankushchowrasia/NexTGen-Classes/51688aa4597877628380c35e04e9dac88ac41688/NexTGen_Humanities_Promo_Video_Generation.mp4" autoplay muted loop playsinline></video>
+          <div class="absolute top-4 left-4 bg-black/90 px-3 py-1 rounded-full text-xs font-bold">Humanities</div>
+        </div>
+        <div class="p-6">
+          <h3 class="text-brand-green text-lg font-bold mb-2">Humanities (Geography, History, Pol. Science, Sociology)</h3>
+          <p class="text-sm text-gray-300 mb-4">Complete Arts stream preparation with notes, tests, past papers and personalised guidance.</p>
+          <div class="flex justify-between items-center border-t border-gray-700 pt-4">
+            <span class="text-sm font-bold text-brand-green">Classes 6–12</span>
+            <a href="https://nextgenclasses.vercel.app/contact.html" class="font-semibold hover:text-brand-green">Enroll</a>
+          </div>
+        </div>
+      </div>
 
-<!-- Course 2: Foundation (Classes 1–5) -->
-<div class="bg-black rounded-2xl overflow-hidden shadow-card hover-card">
-  <div class="relative h-48">
-    <video class="w-full h-full object-cover" src="https://raw.githubusercontent.com/ankushchowrasia/NexTGen-Classes/51688aa4597877628380c35e04e9dac88ac41688/NexTGen_Classes_Promo_Video_Creation.mp4" autoplay muted loop playsinline></video>
-    <div class="absolute top-4 left-4 bg-black/90 px-3 py-1 rounded-full text-xs font-bold">Foundation</div>
-  </div>
-  <div class="p-6">
-    <h3 class="text-brand-green text-lg font-bold mb-2">Classes 1–5 (All Subjects)</h3>
-    <p class="text-sm text-gray-300 mb-4">English-medium ICSE & CBSE tuition covering all subjects with worksheets and concept-based teaching.</p>
-    <div class="flex justify-between items-center border-t border-gray-700 pt-4">
-      <span class="text-sm font-bold text-brand-green">Classes 1–5</span>
-      <a href="https://nextgenclasses.vercel.app/contact.html" class="font-semibold hover:text-brand-green">Enroll</a>
-    </div>
-  </div>
-</div>
+      <!-- Course 2 -->
+      <div class="course-card bg-black rounded-2xl overflow-hidden shadow-card hover-card opacity-0 scale-95">
+        <div class="relative h-48">
+          <video class="w-full h-full object-cover" src="https://raw.githubusercontent.com/ankushchowrasia/NexTGen-Classes/51688aa4597877628380c35e04e9dac88ac41688/NexTGen_Classes_Promo_Video_Creation.mp4" autoplay muted loop playsinline></video>
+          <div class="absolute top-4 left-4 bg-black/90 px-3 py-1 rounded-full text-xs font-bold">Foundation</div>
+        </div>
+        <div class="p-6">
+          <h3 class="text-brand-green text-lg font-bold mb-2">Classes 1–5 (All Subjects)</h3>
+          <p class="text-sm text-gray-300 mb-4">English-medium ICSE & CBSE tuition covering all subjects with worksheets and concept-based teaching.</p>
+          <div class="flex justify-between items-center border-t border-gray-700 pt-4">
+            <span class="text-sm font-bold text-brand-green">Classes 1–5</span>
+            <a href="https://nextgenclasses.vercel.app/contact.html" class="font-semibold hover:text-brand-green">Enroll</a>
+          </div>
+        </div>
+      </div>
 
-<!-- Course 3: English Mastery -->
-<div class="bg-black rounded-2xl overflow-hidden shadow-card hover-card">
-  <div class="relative h-48">
-    <video class="w-full h-full object-cover" src="https://raw.githubusercontent.com/ankushchowrasia/NexTGen-Classes/58ef2f0fa20e92d3de98a93da3727c91269c0b95/NexTGen_English_Course_Promo_Creation.mp4" autoplay muted loop playsinline></video>
-    <div class="absolute top-4 left-4 bg-black/90 px-3 py-1 rounded-full text-xs font-bold">English</div>
-  </div>
-  <div class="p-6">
-    <h3 class="text-brand-green text-lg font-bold mb-2">English Mastery (Language + Literature)</h3>
-    <p class="text-sm text-gray-300 mb-4">Grammar, writing, comprehension, textbook literature, model answers, exam preparation & vocabulary building.</p>
-    <div class="flex justify-between items-center border-t border-gray-700 pt-4">
-      <span class="text-sm font-bold text-brand-green">Classes 6–12</span>
-      <a href="https://nextgenclasses.vercel.app/contact.html" class="font-semibold hover:text-brand-green">Enroll</a>
-    </div>
-  </div>
-</div>
-
-       
+      <!-- Course 3 -->
+      <div class="course-card bg-black rounded-2xl overflow-hidden shadow-card hover-card opacity-0 scale-95">
+        <div class="relative h-48">
+          <video class="w-full h-full object-cover" src="https://raw.githubusercontent.com/ankushchowrasia/NexTGen-Classes/58ef2f0fa20e92d3de98a93da3727c91269c0b95/NexTGen_English_Course_Promo_Creation.mp4" autoplay muted loop playsinline></video>
+          <div class="absolute top-4 left-4 bg-black/90 px-3 py-1 rounded-full text-xs font-bold">English</div>
+        </div>
+        <div class="p-6">
+          <h3 class="text-brand-green text-lg font-bold mb-2">English Mastery (Language + Literature)</h3>
+          <p class="text-sm text-gray-300 mb-4">Grammar, writing, comprehension, textbook literature, model answers, exam preparation & vocabulary building.</p>
+          <div class="flex justify-between items-center border-t border-gray-700 pt-4">
+            <span class="text-sm font-bold text-brand-green">Classes 6–12</span>
+            <a href="https://nextgenclasses.vercel.app/contact.html" class="font-semibold hover:text-brand-green">Enroll</a>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -294,14 +414,14 @@
 <!-- TESTIMONIALS -->
 <section id="testimonials" class="py-24">
   <div class="max-w-7xl mx-auto px-4 text-center">
-    <h2 class="text-4xl text-brand-green font-bold mb-16">Student Stories</h2>
+    <h2 class="testi-title fade-up-text text-4xl text-brand-green font-bold mb-16">Student Stories</h2>
 
     <div class="grid md:grid-cols-2 gap-8">
 
       <!-- REVIEW 1 -->
-      <div class="bg-black/40 p-8 rounded-3xl border-2 testimonial-outline relative">
+      <div class="testi-card bg-black/40 p-8 rounded-3xl border-2 testimonial-outline relative opacity-0 translate-y-12">
         <i class="fas fa-quote-left text-4xl text-brand-green/20 absolute top-8 left-8"></i>
-        <p class="italic mb-6">"The tutor helped me to get 89% in my board exams."</p>
+        <p class="italic mb-6 text-gray-200">"The tutor helped me to get 89% in my board exams."</p>
         <div class="flex items-center gap-4">
           <img src="https://randomuser.me/api/portraits/men/56.jpg" class="w-12 h-12 rounded-full">
           <div>
@@ -312,9 +432,9 @@
       </div>
 
       <!-- REVIEW 2 -->
-      <div class="bg-black/40 p-8 rounded-3xl border-2 testimonial-outline relative">
+      <div class="testi-card bg-black/40 p-8 rounded-3xl border-2 testimonial-outline relative opacity-0 translate-y-12">
         <i class="fas fa-quote-left text-4xl text-brand-green/20 absolute top-8 left-8"></i>
-        <p class="italic mb-6">"NexTGen Classes made learning easy and flexible. The support team is amazing."</p>
+        <p class="italic mb-6 text-gray-200">"NexTGen Classes made learning easy and flexible. The support team is amazing."</p>
         <div class="flex items-center gap-4">
           <img src="https://raw.githubusercontent.com/ankushchowrasia/NexTGen-Classes/51688aa4597877628380c35e04e9dac88ac41688/Screenshot%202025-11-28%20205514.png" class="w-12 h-12 rounded-full">
           <div>
@@ -325,9 +445,9 @@
       </div>
 
       <!-- NEW REVIEW 3 -->
-      <div class="bg-black/40 p-8 rounded-3xl border-2 testimonial-outline relative">
+      <div class="testi-card bg-black/40 p-8 rounded-3xl border-2 testimonial-outline relative opacity-0 translate-y-12">
         <i class="fas fa-quote-left text-4xl text-brand-green/20 absolute top-8 left-8"></i>
-        <p class="italic mb-6">"The notes and explanations helped me improve my grades quickly. Highly recommended."</p>
+        <p class="italic mb-6 text-gray-200">"The notes and explanations helped me improve my grades quickly. Highly recommended."</p>
         <div class="flex items-center gap-4">
           <img src="https://randomuser.me/api/portraits/men/12.jpg" class="w-12 h-12 rounded-full">
           <div>
@@ -338,9 +458,9 @@
       </div>
 
       <!-- NEW REVIEW 4 -->
-      <div class="bg-black/40 p-8 rounded-3xl border-2 testimonial-outline relative">
+      <div class="testi-card bg-black/40 p-8 rounded-3xl border-2 testimonial-outline relative opacity-0 translate-y-12">
         <i class="fas fa-quote-left text-4xl text-brand-green/20 absolute top-8 left-8"></i>
-        <p class="italic mb-6">"Amazing teaching method. I gained confidence in subjects I was weak at."</p>
+        <p class="italic mb-6 text-gray-200">"Amazing teaching method. I gained confidence in subjects I was weak at."</p>
         <div class="flex items-center gap-4">
           <img src="https://raw.githubusercontent.com/ankushchowrasia/NexTGen-Classes/51688aa4597877628380c35e04e9dac88ac41688/Screenshot%202025-11-28%20205507.png" class="w-12 h-12 rounded-full">
           <div>
@@ -353,14 +473,14 @@
     </div>
   </div>
 </section>
-<!-- CONTACT SECTION (FORM REPLACES OLD CTA) -->
+<!-- CONTACT SECTION -->
 <section id="contact" class="py-24">
-  <div class="max-w-4xl mx-auto px-4">
+  <div class="max-w-4xl mx-auto px-4 contact-container opacity-0 translate-y-16">
 
-    <h2 class="text-4xl md:text-5xl text-brand-green font-bold text-center mb-2">
+    <h2 class="text-4xl md:text-5xl text-brand-green font-bold text-center mb-2 fade-up-text">
       Get In Touch
     </h2>
-    <p class="text-center text-gray-300 mb-12">
+    <p class="text-center text-gray-300 mb-12 fade-up-text">
       Feel free to contact us for doubts, admissions, or support.
     </p>
 
@@ -401,8 +521,9 @@
 
       <!-- SUBMIT BUTTON -->
       <div class="mt-8">
+        <!-- Added btn-draw and changed rounded-full to rounded-lg -->
         <button type="submit"
-          class="bg-brand-green text-black font-bold text-lg px-10 py-4 rounded-full flex items-center gap-3 hover:shadow-lg hover:shadow-brand-green/30 transition">
+          class="btn-draw bg-brand-green text-black font-bold text-lg px-10 py-4 rounded-lg flex items-center gap-3 hover:shadow-lg hover:shadow-brand-green/30 transition">
           <i class="fa-solid fa-paper-plane"></i> Send Message
         </button>
       </div>
@@ -522,31 +643,161 @@
 
 </div></footer>
 
-<!-- CREDIT ANIMATION -->
-<style>
-@keyframes glowShift {
-  0% { color: #00BF63; text-shadow: 0 0 8px #00BF63; }
-  33% { color: #00FFAA; text-shadow: 0 0 8px #00FFAA; }
-  66% { color: #00D489; text-shadow: 0 0 8px #00D489; }
-  100% { color: #00BF63; text-shadow: 0 0 8px #00BF63; }
-}
-
-.animate-credit {
-  animation: glowShift 2.5s infinite ease-in-out;
-}
-
-@media(max-width:768px){
-  .animate-credit { font-size: 0.85rem; }
-}
-</style>
 <!-- SCRIPTS -->
 <script>
   // -----------------------------
-  // NAVBAR SCROLL EFFECT
+  // CUSTOM CURSOR
   // -----------------------------
-  const navbar = document.getElementById('navbar');
+  const cursor = document.getElementById('cursor-dot');
+  
+  // Center the cursor dot on the mouse position using GSAP set
+  gsap.set(cursor, {xPercent: -50, yPercent: -50});
 
+  // Use GSAP quickTo for high performance updates
+  const moveCursorX = gsap.quickTo(cursor, "x", { duration: 0.15, ease: "power3.out" });
+  const moveCursorY = gsap.quickTo(cursor, "y", { duration: 0.15, ease: "power3.out" });
+
+  window.addEventListener("mousemove", (e) => {
+    // Reveal cursor on first move
+    if (cursor.style.opacity === "") {
+        gsap.to(cursor, { opacity: 1, duration: 0.5 });
+    }
+    moveCursorX(e.clientX);
+    moveCursorY(e.clientY);
+  });
+
+  // Hide cursor when leaving window
+  document.addEventListener("mouseleave", () => gsap.to(cursor, { opacity: 0, duration: 0.3 }));
+  document.addEventListener("mouseenter", () => gsap.to(cursor, { opacity: 1, duration: 0.3 }));
+
+  // -----------------------------
+  // BACKGROUND ANIMATION (CANVAS)
+  // -----------------------------
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  
+  let width, height;
+  let particles = [];
+  
+  // Brand colors
+  const colors = ['#00BF63', '#00FFAA', '#FFFFFF'];
+  
+  function initBg() {
+    resize();
+    createParticles();
+    animateBg();
+  }
+  
+  function resize() {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  }
+  
+  function createParticles() {
+    particles = [];
+    const count = Math.floor(width * height / 15000); // Density
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5,
+        size: Math.random() * 2,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        alpha: Math.random() * 0.5 + 0.1
+      });
+    }
+  }
+  
+  function animateBg() {
+    ctx.clearRect(0, 0, width, height);
+    
+    // Draw background (optional if body is black, but good for blending)
+    // ctx.fillStyle = '#000000';
+    // ctx.fillRect(0,0,width,height);
+    
+    particles.forEach((p, i) => {
+      p.x += p.vx;
+      p.y += p.vy;
+      
+      // Wrap around
+      if (p.x < 0) p.x = width;
+      if (p.x > width) p.x = 0;
+      if (p.y < 0) p.y = height;
+      if (p.y > height) p.y = 0;
+      
+      // Draw particle
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = p.alpha;
+      ctx.fill();
+      
+      // Connect nearby particles
+      for (let j = i + 1; j < particles.length; j++) {
+        const p2 = particles[j];
+        const dx = p.x - p2.x;
+        const dy = p.y - p2.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        
+        if (dist < 100) {
+          ctx.beginPath();
+          ctx.strokeStyle = '#00BF63'; // Brand Green
+          ctx.globalAlpha = 0.1 * (1 - dist / 100);
+          ctx.lineWidth = 0.5;
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.stroke();
+        }
+      }
+    });
+    
+    requestAnimationFrame(animateBg);
+  }
+  
+  window.addEventListener('resize', () => {
+    resize();
+    createParticles();
+  });
+  
+  initBg();
+
+  // -----------------------------
+  // LENIS SMOOTH SCROLL INIT
+  // -----------------------------
+  // Initialize Lenis with configuration
+  const lenis = new Lenis({
+    duration: 1.2,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    direction: 'vertical',
+    gestureDirection: 'vertical',
+    smooth: true,
+    mouseMultiplier: 1,
+    smoothTouch: false,
+    touchMultiplier: 2,
+  });
+
+  // Connect Lenis to GSAP ScrollTrigger
+  lenis.on('scroll', ScrollTrigger.update);
+
+  // Sync GSAP ticker with Lenis requestAnimationFrame
+  gsap.ticker.add((time) => {
+    lenis.raf(time * 1000);
+  });
+
+  // Turn off GSAP lag smoothing to ensure sync
+  gsap.ticker.lagSmoothing(0);
+
+  // -----------------------------
+  // GSAP ANIMATIONS
+  // -----------------------------
+  // Register ScrollTrigger
+  gsap.registerPlugin(ScrollTrigger);
+
+  // 1. Navbar Scroll Effect
+  const navbar = document.getElementById('navbar');
   window.addEventListener('scroll', () => {
+    // Note: We use window.scrollY here, which works with Lenis
     if (window.scrollY > 20) {
       navbar.classList.add('bg-black', 'shadow-md', 'py-2');
       navbar.classList.remove('bg-transparent', 'py-4');
@@ -554,6 +805,103 @@
       navbar.classList.remove('bg-black', 'shadow-md', 'py-2');
       navbar.classList.add('bg-transparent', 'py-4');
     }
+  });
+
+  // 2. Hero Section Animations (Staggered Entrance)
+  const heroTl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+  // Step 1: Animate Navbar Elements (Stagger from top)
+  heroTl.from(".nav-el", {
+    y: -20,
+    opacity: 0,
+    duration: 0.8,
+    stagger: 0.05,
+    delay: 0.1
+  });
+
+  // Step 2: Animate Hero Text (Stagger from bottom)
+  heroTl.from(".hero-el", {
+    y: 30,
+    opacity: 0,
+    duration: 1,
+    stagger: 0.1,
+  }, "-=0.4");
+  
+  // Step 3: Animate Hero Image (Slide in from right)
+  heroTl.from(".hero-image-container", {
+    x: 50,
+    opacity: 0,
+    duration: 1.2,
+    ease: "power2.out"
+  }, "-=0.8");
+
+  // 3. Global Section Text Animation (Fade Up)
+  // This automatically finds all elements with "fade-up-text" class
+  // and animates them when they scroll into view.
+  ScrollTrigger.batch(".fade-up-text", {
+    onEnter: batch => gsap.to(batch, {
+      opacity: 1, 
+      y: 0, 
+      duration: 0.8, 
+      stagger: 0.1, 
+      ease: "power3.out",
+      overwrite: true 
+    }),
+    start: "top 85%",
+  });
+
+  // 4. Features Section (Cards Stagger)
+  // Separated text animation to generic batch above
+  gsap.to(".feature-card", {
+    scrollTrigger: {
+      trigger: "#features",
+      start: "top 75%", 
+      toggleActions: "play none none reverse"
+    },
+    y: 0,
+    opacity: 1,
+    duration: 0.8,
+    stagger: 0.1
+  });
+
+  // 5. Courses Section (Cards Stagger)
+  gsap.to(".course-card", {
+    scrollTrigger: {
+      trigger: "#courses",
+      start: "top 75%",
+      toggleActions: "play none none reverse"
+    },
+    scale: 1,
+    opacity: 1,
+    duration: 0.6,
+    stagger: 0.15,
+    ease: "back.out(1.7)"
+  });
+
+  // 6. Testimonials (Cards Stagger)
+  gsap.to(".testi-card", {
+    scrollTrigger: {
+      trigger: "#testimonials",
+      start: "top 75%",
+      toggleActions: "play none none reverse"
+    },
+    y: 0,
+    opacity: 1,
+    duration: 0.8,
+    stagger: 0.15
+  });
+
+  // 7. Contact Form (Fade In)
+  gsap.to(".contact-container", {
+    scrollTrigger: {
+      trigger: "#contact",
+      start: "top 80%",
+      toggleActions: "play none none reverse"
+    },
+    y: 0,
+    opacity: 1,
+    duration: 1,
+    ease: "power3.out"
   });
 
 
@@ -568,17 +916,16 @@
   // OPEN/CLOSE MENU
   function toggleMenu() {
     const isOpen = mobileMenu.classList.toggle('open');
-    document.body.classList.toggle('overflow-hidden', isOpen);
+    if(isOpen) {
+      lenis.stop(); // Stop scrolling when menu is open
+    } else {
+      lenis.start(); // Resume scrolling
+    }
   }
 
   // BUTTON EVENTS
   mobileBtn.addEventListener('click', toggleMenu);
   closeMenuBtn.addEventListener('click', toggleMenu);
-
-  // CLOSE MENU ON LINK CLICK
-  mobileLinks.forEach(link => {
-    link.addEventListener('click', toggleMenu);
-  });
 
   // CLOSE MENU ON ESC KEY
   document.addEventListener('keydown', (e) => {
@@ -590,4 +937,3 @@
 
 </body>
 </html>
-
