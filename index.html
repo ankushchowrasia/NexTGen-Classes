@@ -83,6 +83,7 @@
     /* Navbar Link Visibility Fix */
     #navbar a {
       color: white !important; /* Forces white color even on visited links */
+      opacity: 1 !important;
     }
     #navbar a:hover {
       color: #00BF63 !important; /* Forces green on hover */
@@ -106,7 +107,7 @@
     /* Button Border Drawing Animation */
     .btn-draw {
       position: relative;
-      overflow: hidden;
+      /* REMOVED overflow: hidden to prevent text clipping */
     }
     .btn-draw::before,
     .btn-draw::after {
@@ -117,6 +118,7 @@
       box-sizing: border-box;
       border: 2px solid transparent;
       border-radius: inherit;
+      z-index: -1; /* Ensure borders are behind text */
     }
     
     /* Top Left Origin */
@@ -183,13 +185,13 @@
 
       <!-- Desktop Menu -->
       <div class="hidden md:flex items-center space-x-2">
-        <!-- Added inline-flex, whitespace-nowrap, and text-white to solve alignment and visibility -->
-        <a href="#home" class="nav-el nav-link btn-draw inline-flex items-center justify-center whitespace-nowrap text-sm font-medium text-white hover:text-brand-green transition px-4 py-2 rounded-lg" onclick="lenis.scrollTo('#home')">Home</a>
-        <a href="#features" class="nav-el nav-link btn-draw inline-flex items-center justify-center whitespace-nowrap text-sm font-medium text-white hover:text-brand-green transition px-4 py-2 rounded-lg" onclick="lenis.scrollTo('#features')">Features</a>
-        <a href="#courses" class="nav-el nav-link btn-draw inline-flex items-center justify-center whitespace-nowrap text-sm font-medium text-white hover:text-brand-green transition px-4 py-2 rounded-lg" onclick="lenis.scrollTo('#courses')">Courses</a>
-        <a href="#testimonials" class="nav-el nav-link btn-draw inline-flex items-center justify-center whitespace-nowrap text-sm font-medium text-white hover:text-brand-green transition px-4 py-2 rounded-lg" onclick="lenis.scrollTo('#testimonials')">Testimonials</a>
-        <a href="https://nextgenclasses.vercel.app/about.html" class="nav-el btn-draw inline-flex items-center justify-center whitespace-nowrap text-sm font-medium text-white hover:text-brand-green transition px-4 py-2 rounded-lg">About</a>
-        <a href="https://nextgenclasses.vercel.app/contact.html" class="nav-el btn-draw inline-flex items-center justify-center whitespace-nowrap text-sm font-medium text-white hover:text-brand-green transition px-4 py-2 rounded-lg">Contact</a>
+        <!-- Added explicit style color, z-index, and removed GSAP animation class 'nav-el' to guarantee visibility -->
+        <a href="#home" class="nav-link btn-draw relative z-20 inline-flex items-center justify-center whitespace-nowrap text-sm font-medium hover:text-brand-green transition px-4 py-2 rounded-lg" style="color: #ffffff !important;" onclick="lenis.scrollTo('#home')">Home</a>
+        <a href="#features" class="nav-link btn-draw relative z-20 inline-flex items-center justify-center whitespace-nowrap text-sm font-medium hover:text-brand-green transition px-4 py-2 rounded-lg" style="color: #ffffff !important;" onclick="lenis.scrollTo('#features')">Features</a>
+        <a href="#courses" class="nav-link btn-draw relative z-20 inline-flex items-center justify-center whitespace-nowrap text-sm font-medium hover:text-brand-green transition px-4 py-2 rounded-lg" style="color: #ffffff !important;" onclick="lenis.scrollTo('#courses')">Courses</a>
+        <a href="#testimonials" class="nav-link btn-draw relative z-20 inline-flex items-center justify-center whitespace-nowrap text-sm font-medium hover:text-brand-green transition px-4 py-2 rounded-lg" style="color: #ffffff !important;" onclick="lenis.scrollTo('#testimonials')">Testimonials</a>
+        <a href="https://nextgenclasses.vercel.app/about.html" class="nav-link btn-draw relative z-20 inline-flex items-center justify-center whitespace-nowrap text-sm font-medium hover:text-brand-green transition px-4 py-2 rounded-lg" style="color: #ffffff !important;">About</a>
+        <a href="https://nextgenclasses.vercel.app/contact.html" class="nav-link btn-draw relative z-20 inline-flex items-center justify-center whitespace-nowrap text-sm font-medium hover:text-brand-green transition px-4 py-2 rounded-lg" style="color: #ffffff !important;">Contact</a>
       </div>
 
       <!-- Mobile Toggle -->
